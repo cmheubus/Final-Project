@@ -1,4 +1,5 @@
 library(dplyr)
+library(GGally)
 library(ggplot2)
 library(Hmisc)
 library(shiny)
@@ -12,6 +13,16 @@ shinyServer(function(input, output, session) {
     g <- ggplot(iris, aes(x=Sepal.Length, y=Petal.Length))
     g + geom_point()
     })
+  #For the Data Exploration page: creating summary data, using the "var" outputId that I created in my UI file. For these, I also removed the variable "dteday", which just indicated the day on which an observation was collected and should not be used in calculations. 
+  bikeShare2 <- bikeShare %>% select(-"dteday")
+  output$summaries <- renderPrint({
+    summary(bikeShare2[,input$var])
+  })
+  output$ggp <- renderPlot({
+    ggpairs(bikeShare2[,input$var], title="Correlation Matrix")
+  })
+  
+  #For the Data page: creating data table featuring all observations and variables.
   output$bikesTable <- renderDataTable(
     bikeShare,
     options=list(scrollX=TRUE))

@@ -35,29 +35,47 @@ body <- dashboardBody(
               )
             ))),
     tabItem(tabName="dataExploration",
-            titlePanel("Data tab content"),
-            fluidRow(
-              box("Even MORE content!")
-            )),
+            titlePanel("Data Exploration"),
+            sidebarLayout(
+              sidebarPanel(
+                selectizeInput("var", label="Select Two or More Variables of Interest To Examine:", 
+                               multiple=TRUE,
+                               selected=c("temp","cnt"),
+                               choices=c(Season="season", 
+                                         Year="yr", 
+                                         Month="mnth",
+                                         Temperature="temp",
+                                         "Ambient Temperature"="atemp",
+                                         Humidity="hum",
+                                         Windspeed="windspeed",
+                                         "Casual Users"="casual",
+                                         "Registered Users"="registered",
+                                         "Casual & Registered Users"="cnt"), 
+                               options=list(create=TRUE, placeholder="Click to see dropdown list.")), 
+              em("To add a variable, click in the box and choose from the options in the dropdown menu.",
+                 br(),
+                 "To remove a variable that has been selected, click it and hit delete or backspace to remove it from the plots.",
+                 br(),
+                 "Two or more variables must be selected in order for the correlation matrix to work.")
+              ),
+              mainPanel(fluidRow(
+                box(verbatimTextOutput("summaries"), title="Summary Data"),
+                plotOutput("ggp")
+                )))),
     tabItem(tabName="pca",
-            titlePanel("Principal Components Analyis content")
+            titlePanel("Principal Components Analysis content")
             ),
     tabItem(tabName="modeling",
             titlePanel("Modeling content")
             ),
     tabItem(tabName="data",
             titlePanel("Bike Sharing Data"),
-            sidebarLayout( 
-              sidebarPanel("ADD INTERACTIVE COMPONENT FOR SELECTING COLUMNS?"
-                           ),
-              mainPanel(
-                dataTableOutput("bikesTable"),
+            mainPanel(
+                dataTableOutput("bikesTable", width="900px"),
                 downloadButton("downloadData", "Download Data")
                 )
               )
-            )
-    ))
+            ))
 
 shinyUI(
- dashboardPage(header, sidebar, body)
-)
+ dashboardPage(header, sidebar, body))
