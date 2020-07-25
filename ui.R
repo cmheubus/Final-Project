@@ -53,14 +53,15 @@ body <- dashboardBody(
                                          "Casual & Registered Users"="cnt"), 
                                options=list(create=TRUE, placeholder="Click to see dropdown list.")), 
               em("To add a variable, click in the box and choose from the options in the dropdown menu.",
-                 br(),
+                 br(), br(),
                  "To remove a variable that has been selected, click it and hit delete or backspace to remove it from the plots.",
-                 br(),
+                 br(), br(),
                  "Two or more variables must be selected in order for the correlation matrix to work.")
               ),
               mainPanel(fluidRow(
                 box(verbatimTextOutput("summaries"), title="Summary Data"),
-                plotOutput("ggp")
+                box(plotOutput("ggp"), title="Correlation Matrix"), 
+                box(plotOutput("hist"), title="Histograms of Individual Variables")
                 )))),
     tabItem(tabName="pca",
             titlePanel("Principal Components Analysis content")

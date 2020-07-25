@@ -19,7 +19,10 @@ shinyServer(function(input, output, session) {
     summary(bikeShare2[,input$var])
   })
   output$ggp <- renderPlot({
-    ggpairs(bikeShare2[,input$var], title="Correlation Matrix")
+    ggpairs(bikeShare2[,input$var])
+  })
+  output$hist <- renderPlot({
+    hist(bikeShare2[input$var])
   })
   
   #For the Data page: creating data table featuring all observations and variables.
