@@ -1,0 +1,12 @@
+---
+title: "DRAFTING"
+output: html_document
+---
+
+```{r Loading Libraries, include=FALSE}
+library(tidyverse)
+library(utils)
+
+bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sharing-Dataset_day.csv")
+view(bikeShare)
+```
