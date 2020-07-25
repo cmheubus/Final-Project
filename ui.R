@@ -1,4 +1,5 @@
 library(ggplot2)
+library(plotly)
 library(shinydashboard)
 
 header <- dashboardHeader(title="Final Project")
@@ -15,10 +16,17 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   tabItems(
     tabItem(tabName="introduction",
-            h2("Introduction tab content")
+            h2("Introduction tab content"), 
+            fluidRow(
+              box(plotOutput("irisPlot")),
+              box("More box content!")
+              )
             ),
     tabItem(tabName="dataExploration",
-            h2("Data tab content")
+            h2("Data tab content"),
+            fluidRow(
+              box("Even MORE content!")
+            )
             ),
     tabItem(tabName="pca",
             h2("Principal Components Analyis content")
@@ -34,6 +42,3 @@ body <- dashboardBody(
 shinyUI(
  dashboardPage(header, sidebar, body)
 )
-
-
-
