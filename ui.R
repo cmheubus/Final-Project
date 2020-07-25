@@ -1,3 +1,4 @@
+library(DT)
 library(ggplot2)
 library(plotly)
 library(shinydashboard)
@@ -37,8 +38,7 @@ body <- dashboardBody(
             h2("Data tab content"),
             fluidRow(
               box("Even MORE content!")
-            )
-            ),
+            )),
     tabItem(tabName="pca",
             h2("Principal Components Analyis content")
             ),
@@ -46,9 +46,14 @@ body <- dashboardBody(
             h2("Modeling content")
             ),
     tabItem(tabName="data",
-            h2("Data content"))
-    )
-  )
+            titlePanel("Data content"),
+            sidebarLayout( 
+              sidebarPanel("ADD INTERACTIVE COMPONENT FOR SELECTING COLUMNS?"),
+              mainPanel(
+                dataTableOutput("bikesTable"))
+              )
+            )
+    ))
 
 shinyUI(
  dashboardPage(header, sidebar, body)

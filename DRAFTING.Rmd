@@ -10,3 +10,15 @@ library(utils)
 bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sharing-Dataset_day.csv")
 view(bikeShare)
 ```
+
+
+CODE FOR SELECTING INPUT FOR DATATABLE?
+
+              conditionalPanel(
+              'input.dataset === "bikeShare"',
+              checkboxGroupInput("show_cols", "Columns in dataset to show:",
+                                 names(bikeShare), selected=names(bikeShare))
+            )
+
+  output$tableTest <- renderDataTable({
+    datatable(bikeShare[,input$show_cols])
