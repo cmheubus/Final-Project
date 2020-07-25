@@ -17,12 +17,12 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   tabItems(
     tabItem(tabName="introduction",
+            titlePanel("Introduction content"),
             sidebarLayout(
               sidebarPanel(
                 h3("Select options here:")
               ),
                 mainPanel(
-                  h2("Introduction tab content"), 
                   fluidRow(
                     box(plotOutput("irisPlot")),
                     box("More box content!"),
@@ -35,22 +35,25 @@ body <- dashboardBody(
               )
             ))),
     tabItem(tabName="dataExploration",
-            h2("Data tab content"),
+            titlePanel("Data tab content"),
             fluidRow(
               box("Even MORE content!")
             )),
     tabItem(tabName="pca",
-            h2("Principal Components Analyis content")
+            titlePanel("Principal Components Analyis content")
             ),
     tabItem(tabName="modeling",
-            h2("Modeling content")
+            titlePanel("Modeling content")
             ),
     tabItem(tabName="data",
-            titlePanel("Data content"),
+            titlePanel("Bike Sharing Data"),
             sidebarLayout( 
-              sidebarPanel("ADD INTERACTIVE COMPONENT FOR SELECTING COLUMNS?"),
+              sidebarPanel("ADD INTERACTIVE COMPONENT FOR SELECTING COLUMNS?"
+                           ),
               mainPanel(
-                dataTableOutput("bikesTable"))
+                dataTableOutput("bikesTable"),
+                downloadButton("downloadData", "Download Data")
+                )
               )
             )
     ))
