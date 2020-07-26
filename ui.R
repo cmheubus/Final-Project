@@ -63,25 +63,35 @@ body <- dashboardBody(
                 br(), br(),
                 downloadButton("downloadData_dataExploration", "Download Data for Selected Variables")),
               mainPanel(fluidRow(
-                box(title="Summary Data", verbatimTextOutput("summaries"), downloadButton("downloadPlot_summaries", "Download PNG")),
-                box(title="Correlation Matrix", plotOutput("ggp"), downloadButton("downloadPlot_ggp", "Download PNG")), 
-                box(title="Histograms of Individual Variables", plotOutput("hist"), downloadButton("downloadPlot_hist","Download PNG"))
+                box(title="Summary Data", 
+                    verbatimTextOutput("summaries"), 
+                    downloadButton("downloadSummaries", "Download PNG")),
+                box(title="Correlation Matrix", 
+                    plotOutput("ggp"), 
+                    downloadButton("downloadPlot_ggp", "Download PNG")), 
+                box(title="Histograms of Individual Variables", 
+                    plotOutput("hist"), 
+                    downloadButton("downloadPlot_hist","Download PNG"))
               )))),
     tabItem(tabName="pca",
             titlePanel("Principal Components Analysis"), 
             sidebarLayout(
               sidebarPanel(
                 selectInput("var2",
-                            label="Select First Variable",
+                            label="Select First Variable to Compare to PC1 & PC2",
                             choices=names(bikeShare)),
                 selectInput("var3",
                             label="Select Second Variable",
                             choices=names(bikeShare),
-                            selected="cnt")
+                            selected="cnt"),
+                downloadButton("downloadData_pca", "Download Data for Selected Variables")
               ), 
               mainPanel(
+                box(plotOutput("biplot"),
+                    downloadButton("downloadBiplot","Download Biplot")
+                    ),
                 plotOutput("screeplot"), 
-                box(plotOutput("biplot"))
+                verbatimTextOutput("principalComponents")
               )
               )
     ),
