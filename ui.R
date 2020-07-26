@@ -3,8 +3,7 @@ library(ggplot2)
 library(plotly)
 library(shinydashboard)
 
-bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sharing-Dataset_day.csv") %>% select(-"instant")
-bikeShare2 <- bikeShare %>% select(-"dteday")
+bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sharing-Dataset_day.csv") %>% select(-c("instant", "dteday"))
 
 header <- dashboardHeader(title="Final Project")
 sidebar <- dashboardSidebar(
@@ -69,18 +68,20 @@ body <- dashboardBody(
                 box(title="Histograms of Individual Variables", plotOutput("hist"), downloadButton("downloadPlot_hist","Download PNG"))
               )))),
     tabItem(tabName="pca",
-            titlePanel("Principal Components Analysis content"), 
+            titlePanel("Principal Components Analysis"), 
             sidebarLayout(
               sidebarPanel(
                 selectInput("var2",
-                            label="Select X",
-                            names(bikeShare2)),
+                            label="Select First Variable",
+                            choices=names(bikeShare)),
                 selectInput("var3",
-                            label="Select Y",
-                            names(bikeShare2))
+                            label="Select Second Variable",
+                            choices=names(bikeShare),
+                            selected="cnt")
               ), 
               mainPanel(
-                plotOutput("biplot")
+                plotOutput("screeplot"), 
+                box(plotOutput("biplot"))
               )
               )
     ),
