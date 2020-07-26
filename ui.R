@@ -38,20 +38,22 @@ body <- dashboardBody(
             titlePanel("Data Exploration"),
             sidebarLayout(
               sidebarPanel(
-                selectizeInput("var", label="Select Two or More Variables of Interest To Examine:", 
+                selectizeInput("var", 
+                               label="Select Two or More Variables of Interest To Examine:", 
                                multiple=TRUE,
                                selected=c("temp","cnt"),
-                               choices=c(Season="season", 
-                                         Year="yr", 
-                                         Month="mnth",
-                                         Temperature="temp",
-                                         "Ambient Temperature"="atemp",
-                                         Humidity="hum",
-                                         Windspeed="windspeed",
-                                         "Casual Users"="casual",
-                                         "Registered Users"="registered",
-                                         "Casual & Registered Users"="cnt"), 
-                               options=list(create=TRUE, placeholder="Click to see dropdown list.")), 
+                               choices=c("season", 
+                                         "yr", 
+                                         "mnth",
+                                         "temp",
+                                         "atemp",
+                                         "hum",
+                                         "windspeed",
+                                         "casual",
+                                         "registered",
+                                         "cnt"), 
+                               options=list(create=TRUE, 
+                                            placeholder="Click to see dropdown list.")), 
                                em("To add a variable, click in the box and choose from the options in the dropdown menu.",
                                br(), br(),
                                "To remove a variable that has been selected, click it and hit delete or backspace to remove it from the plots.",
@@ -65,7 +67,7 @@ body <- dashboardBody(
                 box(plotOutput("hist"), title="Histograms of Individual Variables", downloadButton("downloadPlot_hist","Download PNG"))
                 )))),
     tabItem(tabName="pca",
-            titlePanel("Principal Components Analysis content")
+            titlePanel("Principal Comp Analysis content")
             ),
     tabItem(tabName="modeling",
             titlePanel("Modeling content")
@@ -79,5 +81,5 @@ body <- dashboardBody(
               )
             ))
 
-shinyUI(
+ui <- fluidPage(
  dashboardPage(header, sidebar, body))
