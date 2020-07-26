@@ -3,6 +3,9 @@ library(ggplot2)
 library(plotly)
 library(shinydashboard)
 
+bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sharing-Dataset_day.csv") %>% select(-"instant")
+bikeShare2 <- bikeShare %>% select(-"dteday")
+
 header <- dashboardHeader(title="Final Project")
 sidebar <- dashboardSidebar(
   sidebarMenu(
@@ -38,7 +41,8 @@ body <- dashboardBody(
             titlePanel("Data Exploration"),
             sidebarLayout(
               sidebarPanel(
-                selectizeInput("var", label="Select Two or More Variables of Interest To Examine:", 
+                selectizeInput("var", 
+                               label="Select Two or More Variables of Interest To Examine:", 
                                multiple=TRUE,
                                selected=c("temp","cnt"),
                                choices=c("Season"="season", 
@@ -65,7 +69,20 @@ body <- dashboardBody(
                 box(title="Histograms of Individual Variables", plotOutput("hist"), downloadButton("downloadPlot_hist","Download PNG"))
               )))),
     tabItem(tabName="pca",
-            titlePanel("Principal Components Analysis content")
+            titlePanel("Principal Components Analysis content"), 
+            sidebarLayout(
+              sidebarPanel(
+                selectInput("var2",
+                            label="Select X",
+                            names(bikeShare2)),
+                selectInput("var3",
+                            label="Select Y",
+                            names(bikeShare2))
+              ), 
+              mainPanel(
+                plotOutput("biplot")
+              )
+              )
     ),
     tabItem(tabName="modeling",
             titlePanel("Modeling content")

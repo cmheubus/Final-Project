@@ -1,6 +1,7 @@
 library(dplyr)
 library(GGally)
 library(ggplot2)
+library(grDevices)
 library(Hmisc)
 library(shiny)
 library(tidyverse)
@@ -11,7 +12,7 @@ shinyServer(function(input, output, session) {
   bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sharing-Dataset_day.csv") %>% select(-"instant")
   bikeShare2 <- bikeShare %>% select(-"dteday")
   
-  output$irisPlot<- renderPlot({
+  output$irisPlot <- renderPlot({
     g <- ggplot(iris, aes(x=Sepal.Length, y=Petal.Length))
     g + geom_point()
   })
@@ -22,7 +23,7 @@ shinyServer(function(input, output, session) {
   })
   
   output$summaries <- renderPrint({
-    summary(bikeReact())
+    with(bikeReact(), summary(bikeReact()))
   })
   output$ggp <- renderPlot({
     with(bikeReact(), ggpairs(bikeReact()))
@@ -36,11 +37,16 @@ shinyServer(function(input, output, session) {
     content=function(file){
       write.csv(bikeReact(), file, row.names=FALSE)
     })
+
   #Data Exploration page: creating download function for PNG output of graphs. 
-  output$downloadPlot_summaries <- downloadHandler(
-    filename="bikeShareData_dataExploration_summaries.png",
-    content=function(file){
-    })
+
+  #For the PCA page
+  bikeReact_biplot <- reactive ({
+    bikeShare2[input$var2, input$var3]
+  })
+  output$biplot <- renderPlot(
+    with(bikeReact_biplot(), )
+  )
   
   #For the Data page: creating data table featuring all observations and variables.
   output$bikesTable <- renderDataTable(
