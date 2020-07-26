@@ -7,19 +7,13 @@ library(shiny)
 library(stats)
 library(tidyverse)
 
-#I removed the unnecessary column of "instant," which simply numbered each observation and did not have quantitative value. 
+#I removed the unnecessary column of "instant," which simply numbered each observation and did not have quantitative value. I also removed the variable "dteday", which just indicated the specific day on which an observation was collected and similarly should not be used in calculations. 
 
 bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sharing-Dataset_day.csv") %>% select(-c("instant", "dteday"))
 
 shinyServer(function(input, output, session) {
-  
-  output$irisPlot <- renderPlot({
-    g <- ggplot(iris, aes(x=Sepal.Length, y=Petal.Length))
-    g + geom_point()
-  })
-  
-  #For the Data Exploration page: creating summary data, using the "var" outputId that I created in my UI file. For these, I also removed the variable "dteday", which just indicated the day on which an observation was collected and should not be used in calculations. 
 
+  #For the Data Exploration page: creating summary data, using the "var" outputId that I created in my UI file. 
   bikeReact <- reactive ({
     newData1 <- bikeShare[input$var] 
   })
@@ -31,6 +25,9 @@ shinyServer(function(input, output, session) {
     print(summariesInput())
   )
   
+  plotGGP <- reactive({
+    df <- bikeReact()
+})
   output$ggp <- renderPlot({
     ggpairs(bikeReact())
   })
@@ -47,6 +44,7 @@ shinyServer(function(input, output, session) {
     })
 
   #Data Exploration page: creating download function for PNG output of summaries & graphs.
+  #CURRENTLY NOT WORKING
   output$downloadSummaries <- downloadHandler(
     filename="bikeShare_summaries.png",
     content=function(file){
@@ -59,13 +57,12 @@ shinyServer(function(input, output, session) {
     filename="GGP.png",
     content=function(file){
       png(file)
-      ggpairs(bikeReact())
+      GGP <- ggpairs(bikeReact())
       dev.off()
     }
   )
 
   #PCA page: Creating biplot with user inputs, plus screeplot and PC analysis with no user input.
-  
   bikeReact2 <- reactive ({
     newData <- bikeShare[c(input$var2, input$var3)] 
   })
