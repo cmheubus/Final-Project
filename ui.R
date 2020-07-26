@@ -52,16 +52,17 @@ body <- dashboardBody(
                                          "Registered Users"="registered",
                                          "Casual & Registered Users"="cnt"), 
                                options=list(create=TRUE, placeholder="Click to see dropdown list.")), 
-              em("To add a variable, click in the box and choose from the options in the dropdown menu.",
-                 br(), br(),
-                 "To remove a variable that has been selected, click it and hit delete or backspace to remove it from the plots.",
-                 br(), br(),
-                 "Two or more variables must be selected in order for the correlation matrix to work.")
-              ),
+                               em("To add a variable, click in the box and choose from the options in the dropdown menu.",
+                               br(), br(),
+                               "To remove a variable that has been selected, click it and hit delete or backspace to remove it from the plots.",
+                               br(), br(),
+                               "Two or more variables must be selected in order for the correlation matrix to work."),
+                               br(), br(),
+                               downloadButton("downloadData_dataExploration", "Download Data for Selected Variables")),
               mainPanel(fluidRow(
-                box(verbatimTextOutput("summaries"), title="Summary Data"),
-                box(plotOutput("ggp"), title="Correlation Matrix"), 
-                box(plotOutput("hist"), title="Histograms of Individual Variables")
+                box(verbatimTextOutput("summaries"), title="Summary Data", downloadButton("downloadPlot_summaries", "Download PNG")),
+                box(plotOutput("ggp"), title="Correlation Matrix", downloadButton("downloadPlot_ggp", "Download PNG")), 
+                box(plotOutput("hist"), title="Histograms of Individual Variables", downloadButton("downloadPlot_hist","Download PNG"))
                 )))),
     tabItem(tabName="pca",
             titlePanel("Principal Components Analysis content")
