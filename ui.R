@@ -127,7 +127,7 @@ body <- dashboardBody(
             titlePanel("Modeling content"),
             sidebarLayout(
               sidebarPanel(
-                checkboxGroupInput("varCheck", "Variables to include:",
+                checkboxGroupInput("varCheck", "Variables to include in model:",
                                    c("Season"="season",
                                      "Year"="yr",
                                      "Month"="mnth",
@@ -142,9 +142,9 @@ body <- dashboardBody(
                                      "Casual Users"="casual",
                                      "Registered Users"="registered",
                                      "Casual & Registered Users"="cnt"))
-                
               ),
-              mainPanel("Hello")
+              mainPanel("Hello"
+                        )
             )
     ),
     tabItem(tabName="data",

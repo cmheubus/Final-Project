@@ -1,3 +1,4 @@
+library(caret)
 library(dplyr)
 library(GGally)
 library(ggplot2)
@@ -102,7 +103,7 @@ shinyServer(function(input, output, session) {
       dev.off()
     }
   )
-  
+
   #Data page: creating data table featuring all observations and variables.
   bikeReact4 <- reactive ({
     newData4 <- bikeShare[input$var4] 

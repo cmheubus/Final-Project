@@ -3,22 +3,40 @@ title: "DRAFTING"
 output: html_document
 ---
 
-```{r Loading Libraries, include=FALSE}
+```{r}
 library(tidyverse)
-library(utils)
+library(caret)
+library(randomForest)
+```
 
-bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sharing-Dataset_day.csv")
-view(bikeShare)
+```{r}
+bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sharing-Dataset_day.csv") %>% select(-c("instant", "dteday"))
+```
+
+```{r}
+  train <- sample(1:nrow(bikeShare), size=nrow(bikeShare)*0.8)
+  test <- dplyr::setdiff(1:nrow(bikeShare), train)
+  bikeTrain <- bikeShare[train,]
+  bikeTest <- bikeShare[test,]
+```
+
+```{r}
+bikeTrain %>% ggplot(aes)
 ```
 
 
-CODE FOR SELECTING INPUT FOR DATATABLE?
+```{r}
 
-              conditionalPanel(
-              'input.dataset === "bikeShare"',
-              checkboxGroupInput("show_cols", "Columns in dataset to show:",
-                                 names(bikeShare), selected=names(bikeShare))
-            )
+rfTree <- train(cnt~., data=bikeTrain, method="rf",
+                  trControl=trainControl(method="repeatedcv", number=10, repeats=3), 
+                  preProcess=c("center", "scale"))
+  rfTbl <- table(data.frame(pred=predict(rfTree, bikeTest), true=bikeTest$cnt))
+  rf=sum(diag(rfTbl)/sum(rfTbl))
+  
+```
 
-  output$tableTest <- renderDataTable({
-    datatable(bikeShare[,input$show_cols])
+```{r}
+saveRDS(rfTree, "rfTree_model.RDS")
+readRDS("rfTree_model.RDS")
+```
+
