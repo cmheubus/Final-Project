@@ -41,12 +41,15 @@ shinyServer(function(input, output, session) {
     df <- bikeReact()
   })
   output$ggp <- renderPlot({
-    ggpairs(bikeReact())
+    ggpairs(plotGGP())
   })
   output$info <- renderText({
     paste0("x=", input$plot_click$x, ", ", "y=", input$plot_click$y)
   })
   
+  plotHist <- reactive({
+    hist(bikeReact)
+  })
   output$hist <- renderPlot({
     with(bikeReact(), hist(bikeReact()))
   })
@@ -59,20 +62,30 @@ shinyServer(function(input, output, session) {
     })
   
   #Data Exploration page: creating download function for PNG output of summaries & graphs.
-  #CURRENTLY NOT WORKING
+  #SUMMARIES CURRENTLY NOT WORKING
   output$downloadSummaries <- downloadHandler(
     filename="bikeShare_summaries.png",
     content=function(file){
       png(file)
       sums <- summary(bikeReact())
+      print(sums)
       dev.off()
     }
   )
   output$downloadPlot_ggp <- downloadHandler(
-    filename="GGP.png",
+    filename="GGPairs.png",
     content=function(file){
       png(file)
       GGP <- ggpairs(bikeReact())
+      print(GGP)
+      dev.off()
+    }
+  )
+  output$downloadPlot_hist <- downloadHandler(
+    filename="Histograms.png",
+    content=function(file){
+      hist <- hist(bikeReact())
+      print(hist)
       dev.off()
     }
   )

@@ -31,7 +31,7 @@ body <- dashboardBody(
                   h4("How Do Weather Conditions, Holidays, and More Affect the Popularity of the Bikeshare Programs?"),
                       p("For my final project, I elected to work with", a("data concerning the Capital Bikeshare program", 
                       href="https://archive.ics.uci.edu/ml/datasets/Bike+Sharing+Dataset"),
-                      "in Washington, DC, gathered across 2011 and 2012. The dataset was compiled by Hadi Fanaee-T and Joao Gama of the University of Porto, who combined information from the official Bikeshare database, as well as separate weather and government resources concerning holidays. The list of variables may be seen to the left."),
+                      "in Washington, DC, gathered across 2011 and 2012. The dataset was compiled by Hadi Fanaee-T and Joao Gama of the University of Porto, who combined information from the official Bikeshare database, as well as separate weather and government resources concerning holidays. The list of variables may be seen below."),
                   HTML("<ul><li> <strong>instant</strong> - index of the observation. <em>I removed this variable, as it did not serve a quantitative purpose.</em> </li>
                       <li><strong>dteday</strong> - date on which observation was recorded. <em>I similarly removed this column.</em></li>
                       <li><strong>season</strong> - season, coded as 1:winter, 2:spring, 3:summer, 4:fall </li>
@@ -47,7 +47,7 @@ body <- dashboardBody(
                       <li><strong>windspeed</strong> - wind speed, also Normalized</li>
                       <li><strong>casual</strong> - count of casual users, who are not registered</li>
                       <li><strong>registered</strong> - count of registered users</li>
-                      <li><strong>cnt</strong> - summation of both casual and registered users</li>
+                      <li><strong>cnt</strong> - summation of both casual and registered users for the day</li>
                      </ul>"),
                   p("This app allows the user to examine the data in several ways. First, the", strong("Data Exploration"), "tab is a beginning resource for understanding the makeup of the data, by allowing the user to create correlation plots, data summaries, and histograms with the data of their chosing."),
                   p("The", strong("Principal Components Analysis"), "tab allows a user to specific two variables to compare to PC1 and PC2 of the dataset. It also features a static screeplot and calculation of the phi values."), 
@@ -151,19 +151,20 @@ body <- dashboardBody(
             )
     ),
     tabItem(tabName="modeling",
-            titlePanel("Modeling content"),
+            titlePanel("Random Forest Model"),
             sidebarLayout(
               sidebarPanel(
-                selectInput("season", "Season", choices=levels(bikeShare$season)),
-                selectInput("yr", "Year", choices=levels(bikeShare$yr)),
-                selectInput("holiday","Holiday", choices=levels(bikeShare$holiday)),
-                selectInput("weekday", "Weekday", choices=levels(bikeShare$weekday)),
-                selectInput("workingday", "Working Day", choices=levels(bikeShare$workingday)),
-                selectInput("weathersit", "Weather Condition", choices=levels(bikeShare$weathersit)),
-                sliderInput("temp", "Temperature", value=0, min=0, max=1),
-                sliderInput("atemp", "Ambient Temperature", value=0, min=0, max=1),
-                sliderInput("hum", "Humidity", value=0, min=0, max=1),
-                sliderInput("windspeed", "Windspeed", value=0, min=0, max=1),
+                h4("Select Variable Values for Prediction"),
+                selectInput("season", "Season", choices=c("Winter"="1","Spring"="2","Summer"="3","Fall"="4")),
+                selectInput("yr", "Year", choices=c("2011"="0", "2012"="1")),
+                selectInput("holiday","Holiday", choices=c("Yes"="1", "No"="0")),
+                selectInput("weekday", "Weekday", choices=c("Yes"="1", "No"="0")),
+                selectInput("workingday", "Working Day", choices=c("Yes"="1", "No"="0")),
+                selectInput("weathersit", "Weather Condition", choices=c("Clear, few clouds..."="1", "Mist + Cloudy..."="2", "Light Snow, Light Rain + Thunderstorm..."="3", "Heavy Rain..."="4")),
+                sliderInput("temp", "Temperature (Celcius, Normalized)", value=0, min=0, max=1),
+                sliderInput("atemp", "Ambient Temperature (Celcius, Normalized)", value=0, min=0, max=1),
+                sliderInput("hum", "Humidity (Normalized)", value=0, min=0, max=1),
+                sliderInput("windspeed", "Windspeed (Normalized)", value=0, min=0, max=1),
                 numericInput("casual", "Casual Users", value=0),
                 numericInput("registered", "Registered Users", value=0)
               ),
