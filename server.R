@@ -44,7 +44,7 @@ shinyServer(function(input, output, session) {
     ggpairs(plotGGP())
   })
   output$info <- renderText({
-    paste0("x=", input$plot_click$x, ", ", "y=", input$plot_click$y)
+    paste0("Frequency=", input$plot_click$y)
   })
   
   plotHist <- reactive({
@@ -131,33 +131,59 @@ shinyServer(function(input, output, session) {
     }
   )
   
-  #Modeling page: creating random forest
+  #Random Forest model page
+  
+  lapply(bikeShare[,])
+  
   RF <- reactive({
-    randomForest(cnt~bikeReact()[input$season] +
-                   bikeReact()[input$yr] +
-                   bikeReact()[input$mnth] + 
-                   bikeReact()[input$holiday] +
-                   bikeReact()[input$weekday] +
-                   bikeReact()[input$weekday] + 
-                   bikeReact()[input$workingday] +
-                   bikeReact()[input$weathersit] +
-                   bikeReact()[input$temp] +
-                   bikeReact()[input$atemp] +
-                   bikeReact()[input$hum] +
-                   bikeReact()[input$windspeed] +
-                   bikeReact()[input$casual] + 
-                   bikeReact()[input$registered],
+   randomForest(cnt~.,
                      data=bikeShare,
-                     ntree=500,
+                     ntree=input$userNtree,
                      mtry=3,
                      importance=TRUE, 
                      replace=FALSE)
   })
-  prediction <- reactive({
-    predict(RF(), bikeReact())
-    })
+
+  bikeReact3 <- reactive ({
+    newData3 <- data.frame(season=input$season,
+                           yr=input$yr,
+                           mnth=input$mnth,
+                           holiday=input$holiday,
+                           weekday=input$weekday,
+                           workingday=input$workingday,
+                           weathersit=input$weathersit,
+                           temp=input$temp,
+                           atemp=input$atemp,
+                           hum=input$hum,
+                           windspeed=input$windspeed,
+                           casual=input$casual,
+                           registered=input$registered)
+    newData3$yr <- as.numeric(newData3$yr)
+    newData3$weekday <- as.factor(newData3$weekday)
+    newData3
+  })
   
-  output$guess <- renderText(prediction())
+  prediction <- reactive({
+    predict(RF(), bikeReact3())
+    })
+  output$prediction <- renderText(prediction())
+  
+  #Bagged Tree model page
+  train <- sample(1:nrow(bikeShare), size=nrow(bikeShare)*0.8)
+  test <- dplyr::setdiff(1:nrow(bikeShare), train)
+  bikeTrain <- bikeShare[train,]
+  bikeTest <- bikeShare[test,]
+  
+  baggedTree <- train(cnt~., 
+                     data=bikeShare, 
+                     method="treebag",
+                     trControl=trainControl(method="repeatedcv", number=10,
+                     repeats=5),
+                     preProcess=c("center","scale"))
+  baggedTbl <- table(data.frame(pred=predict(baggedTree, bikeTest), true=bikeTest$cnt))
+  
+  misclassRate <- 1-(sum(diag(baggedTbl)/sum(baggedTbl)))
+  output$misclass <- renderText(misclassRate)
   
   #Data page: creating data table featuring all observations and variables.
   bikeReact4 <- reactive ({

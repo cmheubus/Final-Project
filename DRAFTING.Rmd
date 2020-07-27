@@ -13,6 +13,25 @@ library(randomForest)
 bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sharing-Dataset_day.csv") %>% select(-c("instant", "dteday"))
 ```
 
+
+```{r}
+  train <- sample(1:nrow(bikeShare), size=nrow(bikeShare)*0.8)
+  test <- dplyr::setdiff(1:nrow(bikeShare), train)
+  bikeTrain <- bikeShare[train,]
+  bikeTest <- bikeShare[test,]
+  
+  baggedTree <- train(cnt~., 
+                     data=bikeShare, 
+                     method="treebag",
+                     trControl=trainControl(method="repeatedcv", number=10,
+                     repeats=5),
+                     preProcess=c("center","scale"))
+  baggedTbl <- table(data.frame(pred=predict(baggedTree, bikeTest), true=bikeTest$cnt))
+  
+  misclassRate <- 1-(sum(diag(baggedTbl)/sum(baggedTbl)))
+```
+
+
 ```{r}
   train <- sample(1:nrow(bikeShare), size=nrow(bikeShare)*0.8)
   test <- dplyr::setdiff(1:nrow(bikeShare), train)

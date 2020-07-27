@@ -11,7 +11,8 @@ sidebar <- dashboardSidebar(
     menuItem("Introduction", tabName="introduction"),
     menuItem("Data Exploration", tabName="dataExploration"),
     menuItem("Principal Components Analysis", tabName="pca"),
-    menuItem("Modeling", tabName="modeling"), 
+    menuItem("Random Forest Modeling", tabName="RFmodeling"), 
+    menuItem("Bagged Tree Model", tabName="baggedTree"),
     menuItem("Data", tabName="data")
   )
 )
@@ -60,7 +61,7 @@ body <- dashboardBody(
             sidebarLayout(
               sidebarPanel(
                 selectizeInput("var", 
-                               label="Select Two or More Variables of Interest To Examine:", 
+                               label="Select Two or More Variables of Interest To Compare:", 
                                multiple=TRUE,
                                selected=c("temp","cnt"),
                                choices=c("Season"="season", 
@@ -88,11 +89,11 @@ body <- dashboardBody(
                     verbatimTextOutput("summaries"), 
                     downloadButton("downloadSummaries", "Download PNG")),
                 box(title="Correlation Matrix", 
-                    plotOutput("ggp", click="plot_click"), 
-                    verbatimTextOutput("info"),
+                    plotOutput("ggp"), 
                     downloadButton("downloadPlot_ggp", "Download PNG")), 
                 box(title="Histograms of Individual Variables", 
-                    plotOutput("hist"), 
+                    plotOutput("hist", click="plot_click"), 
+                    verbatimTextOutput("info"),
                     downloadButton("downloadPlot_hist","Download PNG"))
               )))),
     tabItem(tabName="pca",
@@ -150,13 +151,15 @@ body <- dashboardBody(
               )
             )
     ),
-    tabItem(tabName="modeling",
+    tabItem(tabName="RFmodeling",
             titlePanel("Random Forest Model"),
             sidebarLayout(
               sidebarPanel(
+                numericInput("userNtree","Select the number of trees to include in the model:", min=1, value=1),
                 h4("Select Variable Values for Prediction"),
-                selectInput("season", "Season", choices=c("Winter"="1","Spring"="2","Summer"="3","Fall"="4")),
+                selectInput("season", "Season", choices=(c("1","2","3","4"))),
                 selectInput("yr", "Year", choices=c("2011"="0", "2012"="1")),
+                selectInput("mnth", "Month", choices=c("1","2","3","4","5","6","7","8","9","10","11","12")),
                 selectInput("holiday","Holiday", choices=c("Yes"="1", "No"="0")),
                 selectInput("weekday", "Weekday", choices=c("Sunday"="0","Monday"="1", "Tuesday"="2", "Wednesday"="3", "Thursday"="4", "Friday"="5", "Saturday"="6")),
                 selectInput("workingday", "Working Day", choices=c("Yes"="1", "No"="0")),
@@ -168,10 +171,21 @@ body <- dashboardBody(
                 numericInput("casual", "Casual Users", value=0),
                 numericInput("registered", "Registered Users", value=0)
               ),
-              mainPanel(textOutput("guess")
+              mainPanel(
+                box(h4(em("Given your selections, the anticipated number of both casual and registered bikeshare users for a day (dependent variable cnt) is approximately"),
+                        h3(textOutput("prediction"))))
               )
             )
     ),
+    tabItem(tabName="baggedTree",
+            titlePanel("Bagged Tree Model"),
+            sidebarLayout(
+              sidebarPanel(),
+              mainPanel(
+                textOutput("misclassRate")
+              )
+              )),
+    
     tabItem(tabName="data",
             titlePanel("Bike Sharing Data"),
             sidebarLayout(
