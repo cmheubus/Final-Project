@@ -132,23 +132,20 @@ body <- dashboardBody(
             titlePanel("Modeling content"),
             sidebarLayout(
               sidebarPanel(
-                checkboxGroupInput("varCheck", "Variables to include in model:",
-                                   c("Season"="season",
-                                     "Year"="yr",
-                                     "Month"="mnth",
-                                     "Holiday"="holiday",
-                                     "Weekday"="weekday",
-                                     "Working Day"="workingday",
-                                     "Weather Condition"="weathersit",
-                                     "Temperature"="temp",
-                                     "Ambient Temperature"="atemp",
-                                     "Humidity"="hum",
-                                     "Windspeed"="windspeed",
-                                     "Casual Users"="casual",
-                                     "Registered Users"="registered",
-                                     "Casual & Registered Users"="cnt"))
+                selectInput("season", "Season", choices=levels(bikeShare$season)),
+                selectInput("yr", "Year", choices=levels(bikeShare$yr)),
+                selectInput("holiday","Holiday", choices=levels(bikeShare$holiday)),
+                selectInput("weekday", "Weekday", choices=levels(bikeShare$weekday)),
+                selectInput("workingday", "Working Day", choices=levels(bikeShare$workingday)),
+                selectInput("weathersit", "Weather Condition", choices=levels(bikeShare$weathersit)),
+                sliderInput("temp", "Temperature", value=0, min=0, max=1),
+                sliderInput("atemp", "Ambient Temperature", value=0, min=0, max=1),
+                sliderInput("hum", "Humidity", value=0, min=0, max=1),
+                sliderInput("windspeed", "Windspeed", value=0, min=0, max=1),
+                numericInput("casual", "Casual Users", value=0),
+                numericInput("registered", "Registered Users", value=0)
               ),
-              mainPanel("Hello"
+              mainPanel(textOutput("guess")
               )
             )
     ),

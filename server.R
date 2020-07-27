@@ -1,4 +1,5 @@
 library(caret)
+library(datasets)
 library(dplyr)
 library(GGally)
 library(ggplot2)
@@ -107,6 +108,25 @@ shinyServer(function(input, output, session) {
       dev.off()
     }
   )
+  
+  #Modeling page: creating random forest
+  RF <- randomForest(cnt~.,
+                     data=bikeShare,
+                     ntree=500,
+                     mtry=3,
+                     importance=TRUE, 
+                     replace=FALSE)
+  pred <- function(season, yr, mnth, holiday, weekday, workingday, weathersit, temp, atemp, hum, windspeed, casual, registered, cnt){
+    inputdata <- c(season, yr, mnth, holiday, weekday, workingday, weathersit, temp, atemp, hum, windspeed, casual, registered, cnt)
+    pred_data <- as.data.frame(t(inputdata))
+    colnames(pred_data) <- c("Season","Year","Month", "Holiday", "Weekday", "Working Day", "Weather Condition", "Temperature", "Ambient Temperature", "Humidity", "Windspeed", "Casual Users", "Registered Users", "Casual & Registered Users")
+    prob_out <- predict(RF, pred_data)
+    prob_out <- exp(prob_out)
+    return(prob_out)
+  }
+  
+  output$guess <- renderText({pred(input$season, input$yr, input$mnth, input$holiday, input$weekday, input$workingday, input$weathersit, input$temp, input$atemp, input$hum, input$windspeed, input$casual, input$registered)
+  })
   
   #Data page: creating data table featuring all observations and variables.
   bikeReact4 <- reactive ({

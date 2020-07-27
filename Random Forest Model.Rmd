@@ -16,26 +16,28 @@ bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sha
 
 
 Separating data into train and test sets:
+{r}
+  train <- sample(1:nrow(bikeShare, size=nrow(bikeShare)*0.8))
+  test <- dplyr::setdiff(1:nrow(bikeShare), train)
+  bikeTrain <- bikeShare[train,]
+  bikeTest <- bikeShare[test,]
+
+
 ```{r}
-bikeReact4 <- reactive({
-    newData <- bikeShare[input$varCheck] 
-  })
-  train <- sample(1:nrow(bikeReact4()), size=nrow(bikeReact4())*0.8)
-  test <- dplyr::setdiff(1:nrow(bikeReact4()), train)
-  bikeTrain <- bikeReact4()[train,]
-  bikeTest <- bikeReact4()[test,]
-  target.variable <- "cnt"
+rf <- randomForest(cnt~.,
+                  data=bikeShare,
+                  ntree=500,
+                  mtry=3,
+                  importance=TRUE)
 ```
 
-  
+```{r}
+saveRDS(rf, "model_rf.rds")
+```
+
+
   #Building regression model
-  rtTree <- randomForest(cnt~.,
-                           data=bikeTrain,
-                           ntree=500,
-                           mtry=3,
-                           importance=TRUE,
-                           na.action=randomForest::na.roughfix,
-                           replace=FALSE)
+
   predicted.training <- resultRF$predicted
   actual.training <- bikeTrain$cnt
   
