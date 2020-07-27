@@ -69,7 +69,8 @@ body <- dashboardBody(
                     verbatimTextOutput("summaries"), 
                     downloadButton("downloadSummaries", "Download PNG")),
                 box(title="Correlation Matrix", 
-                    plotOutput("ggp"), 
+                    plotOutput("ggp", click="plot_click"), 
+                    verbatimTextOutput("info"),
                     downloadButton("downloadPlot_ggp", "Download PNG")), 
                 box(title="Histograms of Individual Variables", 
                     plotOutput("hist"), 
@@ -80,7 +81,7 @@ body <- dashboardBody(
             sidebarLayout(
               sidebarPanel(
                 selectInput("var2",
-                            label="Select First Variable to Compare to PC1 & PC2",
+                            label="Select First Variable to Compare to PC1 & PC2:",
                             choices=c("Season"="season", 
                                       "Year"="yr", 
                                       "Month"="mnth",
@@ -96,7 +97,7 @@ body <- dashboardBody(
                                       "Registered Users"="registered",
                                       "Casual & Registered Users"="cnt")),
                 selectInput("var3",
-                            label="Select Second Variable",
+                            label="Select Second Variable:",
                             choices=c("Season"="season", 
                                       "Year"="yr", 
                                       "Month"="mnth",
@@ -112,16 +113,20 @@ body <- dashboardBody(
                                       "Registered Users"="registered",
                                       "Casual & Registered Users"="cnt"),
                             selected="cnt"),
+                conditionalPanel(condition="input.var2==input.var3", 
+                                 em(h4("Please select a different second variable!")
+                                     )), 
+                br(),
                 downloadButton("downloadData_pca", "Download Data for Selected Variables")
               ), 
               mainPanel(
                 box(title="Biplot featuring 1st and 2nd Principal Components", plotOutput("biplot"),
                     downloadButton("downloadBiplot","Download Biplot")
-                    ),
+                ),
                 box(title="Screeplot of How Much of the Variance is Described by the Principal Components", plotOutput("screeplot")), 
                 box(title="Principal Components", verbatimTextOutput("principalComponents"))
               )
-              )
+            )
     ),
     tabItem(tabName="modeling",
             titlePanel("Modeling content"),
@@ -144,7 +149,7 @@ body <- dashboardBody(
                                      "Casual & Registered Users"="cnt"))
               ),
               mainPanel("Hello"
-                        )
+              )
             )
     ),
     tabItem(tabName="data",
@@ -172,6 +177,8 @@ body <- dashboardBody(
                                options=list(create=TRUE, placeholder="Click to see dropdown list.")),
                 em("To view a subset of the data, simply click on the variable(s) you wish to remove and hit delete or backspace."),
                 br(), br(),
+                conditionalPanel(condition="input.var4==0", 
+                                 em(h4("You must select at least one variable!"))),
                 downloadButton("downloadData", "Download Data for Selected Variables")
               ),
               mainPanel(

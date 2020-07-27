@@ -14,12 +14,12 @@ library(tidyverse)
 bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sharing-Dataset_day.csv") %>% select(-c("instant", "dteday"))
 
 shinyServer(function(input, output, session) {
-
+  
   #For the Data Exploration page: creating summary data, using the "var" outputId that I created in my UI file. 
   bikeReact <- reactive ({
     newData1 <- bikeShare[input$var] 
   })
-
+  
   summariesInput <- reactive({
     sums <- summary(bikeReact())
   })
@@ -29,21 +29,25 @@ shinyServer(function(input, output, session) {
   
   plotGGP <- reactive({
     df <- bikeReact()
-})
+  })
   output$ggp <- renderPlot({
     ggpairs(bikeReact())
   })
+  output$info <- renderText({
+    paste0("x=", input$plot_click$x, ", ", "y=", input$plot_click$y)
+  })
+  
   output$hist <- renderPlot({
     with(bikeReact(), hist(bikeReact()))
   })
-
+  
   #Data Exploration page: creating download function for CSV featuring data of selected variables. 
   output$downloadData_dataExploration <- downloadHandler(
     filename="bikeShareData_dataExploration.csv",
     content=function(file){
       write.csv(bikeReact(), file, row.names=FALSE)
     })
-
+  
   #Data Exploration page: creating download function for PNG output of summaries & graphs.
   #CURRENTLY NOT WORKING
   output$downloadSummaries <- downloadHandler(
@@ -62,7 +66,7 @@ shinyServer(function(input, output, session) {
       dev.off()
     }
   )
-
+  
   #PCA page: Creating biplot with user inputs, plus screeplot and PC analysis with no user input.
   bikeReact2 <- reactive ({
     newData <- bikeShare[c(input$var2, input$var3)] 
@@ -103,7 +107,7 @@ shinyServer(function(input, output, session) {
       dev.off()
     }
   )
-
+  
   #Data page: creating data table featuring all observations and variables.
   bikeReact4 <- reactive ({
     newData4 <- bikeShare[input$var4] 
