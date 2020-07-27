@@ -47,6 +47,10 @@ body <- dashboardBody(
                                choices=c("Season"="season", 
                                          "Year"="yr", 
                                          "Month"="mnth",
+                                         "Holiday"="holiday",
+                                         "Weekday"="weekday",
+                                         "Working Day"="workingday",
+                                         "Weather Condition"="weathersit",
                                          "Temperature"="temp",
                                          "Ambient Temperature"="atemp",
                                          "Humidity"="hum",
@@ -57,9 +61,7 @@ body <- dashboardBody(
                                options=list(create=TRUE, placeholder="Click to see dropdown list.")), 
                 em("To add a variable, click in the box and choose from the options in the dropdown menu.",
                    br(), br(),
-                   "To remove a variable that has been selected, click it and hit delete or backspace to remove it from the plots.",
-                   br(), br(),
-                   "Two or more variables must be selected in order for the correlation matrix to work."),
+                   "To remove a variable that has been selected, click it and hit delete or backspace to remove it from the plots."),
                 br(), br(),
                 downloadButton("downloadData_dataExploration", "Download Data for Selected Variables")),
               mainPanel(fluidRow(
@@ -79,30 +81,102 @@ body <- dashboardBody(
               sidebarPanel(
                 selectInput("var2",
                             label="Select First Variable to Compare to PC1 & PC2",
-                            choices=names(bikeShare)),
+                            choices=c("Season"="season", 
+                                      "Year"="yr", 
+                                      "Month"="mnth",
+                                      "Holiday"="holiday",
+                                      "Weekday"="weekday",
+                                      "Working Day"="workingday",
+                                      "Weather Condition"="weathersit",
+                                      "Temperature"="temp",
+                                      "Ambient Temperature"="atemp",
+                                      "Humidity"="hum",
+                                      "Windspeed"="windspeed",
+                                      "Casual Users"="casual",
+                                      "Registered Users"="registered",
+                                      "Casual & Registered Users"="cnt")),
                 selectInput("var3",
                             label="Select Second Variable",
-                            choices=names(bikeShare),
+                            choices=c("Season"="season", 
+                                      "Year"="yr", 
+                                      "Month"="mnth",
+                                      "Holiday"="holiday",
+                                      "Weekday"="weekday",
+                                      "Working Day"="workingday",
+                                      "Weather Condition"="weathersit",
+                                      "Temperature"="temp",
+                                      "Ambient Temperature"="atemp",
+                                      "Humidity"="hum",
+                                      "Windspeed"="windspeed",
+                                      "Casual Users"="casual",
+                                      "Registered Users"="registered",
+                                      "Casual & Registered Users"="cnt"),
                             selected="cnt"),
                 downloadButton("downloadData_pca", "Download Data for Selected Variables")
               ), 
               mainPanel(
-                box(plotOutput("biplot"),
+                box(title="Biplot featuring 1st and 2nd Principal Components", plotOutput("biplot"),
                     downloadButton("downloadBiplot","Download Biplot")
                     ),
-                plotOutput("screeplot"), 
-                verbatimTextOutput("principalComponents")
+                box(title="Screeplot of How Much of the Variance is Described by the Principal Components", plotOutput("screeplot")), 
+                box(title="Principal Components", verbatimTextOutput("principalComponents"))
               )
               )
     ),
     tabItem(tabName="modeling",
-            titlePanel("Modeling content")
+            titlePanel("Modeling content"),
+            sidebarLayout(
+              sidebarPanel(
+                checkboxGroupInput("varCheck", "Variables to include:",
+                                   c("Season"="season",
+                                     "Year"="yr",
+                                     "Month"="mnth",
+                                     "Holiday"="holiday",
+                                     "Weekday"="weekday",
+                                     "Working Day"="workingday",
+                                     "Weather Condition"="weathersit",
+                                     "Temperature"="temp",
+                                     "Ambient Temperature"="atemp",
+                                     "Humidity"="hum",
+                                     "Windspeed"="windspeed",
+                                     "Casual Users"="casual",
+                                     "Registered Users"="registered",
+                                     "Casual & Registered Users"="cnt"))
+                
+              ),
+              mainPanel("Hello")
+            )
     ),
     tabItem(tabName="data",
             titlePanel("Bike Sharing Data"),
-            mainPanel(
-              dataTableOutput("bikesTable", width="900px"),
-              downloadButton("downloadData", "Download Data")
+            sidebarLayout(
+              sidebarPanel(
+                selectizeInput("var4", 
+                               label="Select Variables of Interest:", 
+                               multiple=TRUE,
+                               selected=names(bikeShare),
+                               choices=c("Season"="season", 
+                                         "Year"="yr", 
+                                         "Month"="mnth",
+                                         "Holiday"="holiday",
+                                         "Weekday"="weekday",
+                                         "Working Day"="workingday",
+                                         "Weather Condition"="weathersit",
+                                         "Temperature"="temp",
+                                         "Ambient Temperature"="atemp",
+                                         "Humidity"="hum",
+                                         "Windspeed"="windspeed",
+                                         "Casual Users"="casual",
+                                         "Registered Users"="registered",
+                                         "Casual & Registered Users"="cnt"), 
+                               options=list(create=TRUE, placeholder="Click to see dropdown list.")),
+                em("To view a subset of the data, simply click on the variable(s) you wish to remove and hit delete or backspace."),
+                br(), br(),
+                downloadButton("downloadData", "Download Data for Selected Variables")
+              ),
+              mainPanel(
+                dataTableOutput("bikesTable", width="600px")
+              )
             )
     )
   ))

@@ -3,6 +3,7 @@ library(GGally)
 library(ggplot2)
 library(grDevices)
 library(Hmisc)
+library(randomForest)
 library(shiny)
 library(stats)
 library(tidyverse)
@@ -31,7 +32,6 @@ shinyServer(function(input, output, session) {
   output$ggp <- renderPlot({
     ggpairs(bikeReact())
   })
-  
   output$hist <- renderPlot({
     with(bikeReact(), hist(bikeReact()))
   })
@@ -104,13 +104,16 @@ shinyServer(function(input, output, session) {
   )
   
   #Data page: creating data table featuring all observations and variables.
+  bikeReact4 <- reactive ({
+    newData4 <- bikeShare[input$var4] 
+  })
   output$bikesTable <- renderDataTable(
-    bikeShare,
+    bikeReact4(),
     options=list(scrollX=TRUE))
   output$downloadData <- downloadHandler(
     filename="bikeShareData.csv",
     content=function(file){
-      write.csv(bikeShare, file, row.names=FALSE)
+      write.csv(bikeReact4(), file, row.names=FALSE)
     }
   )
   
