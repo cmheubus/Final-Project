@@ -132,23 +132,32 @@ shinyServer(function(input, output, session) {
   )
   
   #Modeling page: creating random forest
-  RF <- randomForest(cnt~.,
+  RF <- reactive({
+    randomForest(cnt~bikeReact()[input$season] +
+                   bikeReact()[input$yr] +
+                   bikeReact()[input$mnth] + 
+                   bikeReact()[input$holiday] +
+                   bikeReact()[input$weekday] +
+                   bikeReact()[input$weekday] + 
+                   bikeReact()[input$workingday] +
+                   bikeReact()[input$weathersit] +
+                   bikeReact()[input$temp] +
+                   bikeReact()[input$atemp] +
+                   bikeReact()[input$hum] +
+                   bikeReact()[input$windspeed] +
+                   bikeReact()[input$casual] + 
+                   bikeReact()[input$registered],
                      data=bikeShare,
                      ntree=500,
                      mtry=3,
                      importance=TRUE, 
                      replace=FALSE)
-  pred <- function(season, yr, mnth, holiday, weekday, workingday, weathersit, temp, atemp, hum, windspeed, casual, registered, cnt){
-    inputdata <- c(season, yr, mnth, holiday, weekday, workingday, weathersit, temp, atemp, hum, windspeed, casual, registered, cnt)
-    pred_data <- as.data.frame(t(inputdata))
-    colnames(pred_data) <- c("Season","Year","Month", "Holiday", "Weekday", "Working Day", "Weather Condition", "Temperature", "Ambient Temperature", "Humidity", "Windspeed", "Casual Users", "Registered Users", "Casual & Registered Users")
-    prob_out <- predict(RF, pred_data)
-    prob_out <- exp(prob_out)
-    return(prob_out)
-  }
-  
-  output$guess <- renderText({pred(input$season, input$yr, input$mnth, input$holiday, input$weekday, input$workingday, input$weathersit, input$temp, input$atemp, input$hum, input$windspeed, input$casual, input$registered)
   })
+  prediction <- reactive({
+    predict(RF(), bikeReact())
+    })
+  
+  output$guess <- renderText(prediction())
   
   #Data page: creating data table featuring all observations and variables.
   bikeReact4 <- reactive ({

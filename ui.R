@@ -158,7 +158,7 @@ body <- dashboardBody(
                 selectInput("season", "Season", choices=c("Winter"="1","Spring"="2","Summer"="3","Fall"="4")),
                 selectInput("yr", "Year", choices=c("2011"="0", "2012"="1")),
                 selectInput("holiday","Holiday", choices=c("Yes"="1", "No"="0")),
-                selectInput("weekday", "Weekday", choices=c("Yes"="1", "No"="0")),
+                selectInput("weekday", "Weekday", choices=c("Sunday"="0","Monday"="1", "Tuesday"="2", "Wednesday"="3", "Thursday"="4", "Friday"="5", "Saturday"="6")),
                 selectInput("workingday", "Working Day", choices=c("Yes"="1", "No"="0")),
                 selectInput("weathersit", "Weather Condition", choices=c("Clear, few clouds..."="1", "Mist + Cloudy..."="2", "Light Snow, Light Rain + Thunderstorm..."="3", "Heavy Rain..."="4")),
                 sliderInput("temp", "Temperature (Celcius, Normalized)", value=0, min=0, max=1),
