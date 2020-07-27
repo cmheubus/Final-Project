@@ -15,6 +15,15 @@ library(tidyverse)
 bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sharing-Dataset_day.csv") %>% select(-c("instant", "dteday"))
 
 shinyServer(function(input, output, session) {
+  #For the Introduction page: creating MathJax. 
+  output$form1 <- renderUI({
+    helpText(withMathJax("Find
+                         $$z_{i11}=\\phi_{11}x_{i1}+\\phi_{21}x_{i2}+...+\\phi_{p1}x_{ip}$$
+                         values such that the set of Z's has the largest variance."))
+  })
+  output$form1constraint <- renderUI({
+    helpText(withMathJax("Contraint: $$\\sum_{j=1}^p\\phi_{j1}^2=1$$"))
+  })
   
   #For the Data Exploration page: creating summary data, using the "var" outputId that I created in my UI file. 
   bikeReact <- reactive ({
