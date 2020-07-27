@@ -19,19 +19,40 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   tabItems(
     tabItem(tabName="introduction",
-            titlePanel("Exploring DC Bicycle Sharing Data"),
+            titlePanel("Exploring Bicycle Sharing Data"),
             sidebarLayout(
               sidebarPanel(
-                h5(a("Click here to visit the UCI website.", 
-                     href="https://archive.ics.uci.edu/ml/datasets/Bike+Sharing+Dataset"))
+                h5(strong("Data Citation")),
+                "Fanaee-T, Hadi, and Gama, Joao, 'Event labeling combining ensemble detectors and background knowledge', Progress in Artificial Intelligence (2013): pp. 1-15, Springer Berlin Heidelberg,",
+                a("Web Link", href="https://archive.ics.uci.edu/ml/datasets/Bike+Sharing+Dataset")
               ),
               mainPanel(
                 fluidRow(
-                  h4("Subtitle Here"),
-                      p(strong("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed porttitor nulla sed purus consequat, non mollis ante mattis. Maecenas vel elit finibus, tincidunt magna ac, ullamcorper purus."), 
-                        br()),
-                      p("Sed ac sagittis lorem, sit amet efficitur ante. Suspendisse massa tortor, rutrum eu pretium vitae, dapibus ac velit. Praesent at est pulvinar arcu ornare convallis feugiat nec eros. Ut eget magna sapien. Integer semper fermentum metus facilisis tempus. Proin orci elit, pulvinar non felis non, tincidunt porta metus. Vestibulum mollis dapibus urna, sed vulputate enim vestibulum eget. Duis quis diam id dui tempor vestibulum. Pellentesque sit amet dignissim velit.")
-                  
+                  h4("How Do Weather Conditions, Holidays, and More Affect the Popularity of the Bikeshare Programs?"),
+                      p("For my final project, I elected to work with", a("data concerning the Capital Bikeshare program", 
+                      href="https://archive.ics.uci.edu/ml/datasets/Bike+Sharing+Dataset"),
+                      "in Washington, DC, gathered across 2011 and 2012. The dataset was compiled by Hadi Fanaee-T and Joao Gama of the University of Porto, who combined information from the official Bikeshare database, as well as separate weather and government resources concerning holidays. The list of variables may be seen to the left."),
+                  HTML("<ul><li> <strong>instant</strong> - index of the observation. <em>I removed this variable, as it did not serve a quantitative purpose.</em> </li>
+                      <li><strong>dteday</strong> - date on which observation was recorded. <em>I similarly removed this column.</em></li>
+                      <li><strong>season</strong> - season, coded as 1:winter, 2:spring, 3:summer, 4:fall </li>
+                      <li><strong>yr</strong> - year, coded as 0:2011, 1:2012</li>
+                      <li><strong>mnth</strong>  - month, from 1 to 12</li>
+                      <li><strong>hr</strong> - hour of the day, from 0 to 23</li>
+                      <li><strong>holiday</strong> - whether the day is a federal holiday or not</li>
+                      <li><strong>weekday</strong> - day of the week</li>
+                      <li><strong>workingday</strong> - 1 if the day is neither a holiday nor weekend, 0 otherwise.</li>
+                      <li><strong>weathersit</strong> - weather situation, coded as 1: clear, few clouds, partly cloudy; 2: mist + cloudy, mist + broken clouds, mist + few clouds, mist; 3: light snow, light rain + thunderstorm + scattered clouds, light rain + scattered clouds; 4: heavy rain + ice pallets + thunderstorm + mist, snow + fog</li>
+                      <li><strong>temp</strong> - temperature, <em>Normalized</em> in Celcius</li>
+                      <li><strong>hum</strong> - humidity, also Normalized</li>
+                      <li><strong>windspeed</strong> - wind speed, also Normalized</li>
+                      <li><strong>casual</strong> - count of casual users, who are not registered</li>
+                      <li><strong>registered</strong> - count of registered users</li>
+                      <li><strong>cnt</strong> - summation of both casual and registered users</li>
+                     </ul>"),
+                  p("This app allows the user to examine the data in several ways. First, the", strong("Data Exploration"), "tab is a beginning resource for understanding the makeup of the data, by allowing the user to create correlation plots, data summaries, and histograms with the data of their chosing."),
+                  p("The", strong("Principal Components Analysis"), "tab allows a user to specific two variables to compare to PC1 and PC2 of the dataset. It also features a static screeplot and calculation of the phi values."), 
+                  p("The", strong("Modeling"), "tab..."), #MUST BE EDITED
+                  p("And finally, the", strong("Data"), "tab allows the user to select which variables they are interested in, for them to either view within the app or download a custom dataset, per their variable selections.")
                 )
               ))),
     tabItem(tabName="dataExploration",
