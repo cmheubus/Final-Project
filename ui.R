@@ -52,7 +52,7 @@ body <- dashboardBody(
                      </ul>"),
                   p("This app allows the user to examine the data in several ways. First, the", strong("Data Exploration"), "tab is a beginning resource for understanding the makeup of the data, by allowing the user to create correlation plots, data summaries, and histograms with the data of their chosing."),
                   p("The", strong("Principal Components Analysis"), "tab allows a user to specific two variables to compare to PC1 and PC2 of the dataset. It also features a static screeplot and calculation of the phi values."), 
-                  p("The", strong("Modeling"), "tab..."), #MUST BE EDITED
+                  p("The", strong("Modeling"), "tabs did not turn out as I had intended. I attempted to conduct a Random Forest as well as a Bagged Tree model, but my approach was inconsistent. Though the numeric values can be successfully altered on the Random Forest model, the categorical variable tabs sadly have no effects; the bones are there, but I believe I must have mistakes along the way that precluded the server.R and ui.R files from talking with one another successfully. I have included comments specifically within the server.R file with further details about where I landed - and what the aim had been."),
                   p("And finally, the", strong("Data"), "tab allows the user to select which variables they are interested in, for them to either view within the app or download a custom dataset, per their variable selections.")
                 )
               ))),
@@ -157,7 +157,7 @@ body <- dashboardBody(
               sidebarPanel(
                 numericInput("userNtree","Select the number of trees to include in the model:", min=1, value=1),
                 h4("Select Variable Values for Prediction"),
-                selectInput("season", "Season", choices=(c("1","2","3","4"))),
+                selectInput("season", "Season", choices=(c("Winter"="1","Spring"="2","Summer"="3","Fall"="4"))),
                 selectInput("yr", "Year", choices=c("2011"="0", "2012"="1")),
                 selectInput("mnth", "Month", choices=c("1","2","3","4","5","6","7","8","9","10","11","12")),
                 selectInput("holiday","Holiday", choices=c("Yes"="1", "No"="0")),
@@ -180,9 +180,29 @@ body <- dashboardBody(
     tabItem(tabName="baggedTree",
             titlePanel("Bagged Tree Model"),
             sidebarLayout(
-              sidebarPanel(),
+              sidebarPanel(
+                numericInput("userNum","Select the number of iterations:", min=2, value=10),
+                numericInput("userRepeats", "Select repeats:", min=1, value=5),
+                checkboxGroupInput("var4",
+                                   label="Select variables to include in the model:",
+                                   choices=c("Season"="season", 
+                                             "Year"="yr", 
+                                             "Month"="mnth",
+                                             "Holiday"="holiday",
+                                             "Weekday"="weekday",
+                                             "Working Day"="workingday",
+                                             "Weather Condition"="weathersit",
+                                             "Temperature"="temp",
+                                             "Ambient Temperature"="atemp",
+                                             "Humidity"="hum",
+                                             "Windspeed"="windspeed",
+                                             "Casual Users"="casual",
+                                             "Registered Users"="registered",
+                                             "Casual & Registered Users"="cnt"))
+              ),
               mainPanel(
-                textOutput("misclassRate")
+                h3("The bagged tree method did NOT fare well, with a misclassification rate of", textOutput("misclassBagged")),
+                textOutput("predBagged")
               )
               )),
     
@@ -190,7 +210,7 @@ body <- dashboardBody(
             titlePanel("Bike Sharing Data"),
             sidebarLayout(
               sidebarPanel(
-                selectizeInput("var4", 
+                selectizeInput("var5", 
                                label="Select Variables of Interest:", 
                                multiple=TRUE,
                                selected=names(bikeShare),
