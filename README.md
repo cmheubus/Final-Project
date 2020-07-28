@@ -1,2 +1,6 @@
 # Final Project
-Test 123 
+#(May need to be launched from Rstudio instead)
+library(shiny)
+app <- shinyApp(ui, server)
+runApp(app)
+

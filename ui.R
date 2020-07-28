@@ -242,5 +242,5 @@ body <- dashboardBody(
     )
   ))
 
-shinyUI(
+ui <- shinyUI(
   dashboardPage(header, sidebar, body))

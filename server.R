@@ -13,9 +13,8 @@ library(tree)
 
 #I removed the unnecessary column of "instant," which simply numbered each observation and did not have quantitative value. I also removed the variable "dteday", which just indicated the specific day on which an observation was collected and similarly should not be used in calculations. 
 
-bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sharing-Dataset_day.csv") %>% select(-c("instant", "dteday"))
-
-shinyServer(function(input, output, session) {
+server <- shinyServer(function(input, output, session) {
+  bikeShare <- read.csv(file="/Users/christinemarieheubusch/Final-Project/Bike-Sharing-Dataset_day.csv") %>% select(-c("instant", "dteday"))
   #For the Introduction page: creating MathJax. 
   output$form1 <- renderUI({
     helpText(withMathJax("Find
@@ -85,7 +84,7 @@ shinyServer(function(input, output, session) {
   output$downloadPlot_hist <- downloadHandler(
     filename="Histograms.png",
     content=function(file){
-      png(file)
+      
       plot <- hist(bikeReact())
       print(plot)
       dev.off()
